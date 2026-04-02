@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLAM BALL — Shot Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #E8181A;
+    --red-dim: #9c0f10;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --card: #161616;
+    --border: #242424;
+    --text: #E8E8E8;
+    --muted: #666;
+    --done: #1a9c3e;
+    --done-bg: #0d2318;
+    --accent: #ff4d00;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    padding: 48px 24px 36px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 200px;
+    background: radial-gradient(ellipse, rgba(232,24,26,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 10vw, 96px);
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+  h1 span { color: var(--red); }
+  .subtitle {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    max-width: 860px;
+    margin: 32px auto 0;
+    padding: 0 24px;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .progress-meta .done-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--red);
+  }
+  .progress-meta .total-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--red), var(--accent));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* EXERCISE BLOCK */
+  .exercise {
+    margin-bottom: 32px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--card);
+    transition: border-color 0.3s;
+  }
+  .exercise.all-done { border-color: var(--done); }
+
+  .exercise-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .exercise-header:hover { background: rgba(255,255,255,0.02); }
+
+  .ex-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--border);
+    min-width: 44px;
+    transition: color 0.3s;
+  }
+  .exercise.all-done .ex-number { color: var(--done); }
+
+  .ex-info { flex: 1; }
+  .ex-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .ex-progress {
+    margin-top: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .chevron {
+    width: 20px; height: 20px;
+    stroke: var(--muted);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  .exercise-header[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+
+  /* ACCORDION BODY */
+  .exercise-body {
+    display: none;
+    padding: 0 24px 28px;
+  }
+  .exercise-body.open { display: block; }
+
+  /* SCRIPT BLOCK */
+  .script-block {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+  }
+  .script-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .script-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .script-steps li {
+    font-size: 13.5px;
+    color: #aaa;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .script-steps li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--red-dim);
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  /* SHOT CHECKLIST */
+  .shots-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .shot-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    background: rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    outline: none;
+  }
+  .shot-item:hover { background: rgba(255,255,255,0.03); border-color: #333; }
+  .shot-item.checked {
+    background: var(--done-bg);
+    border-color: var(--done);
+  }
+
+  .check-box {
+    width: 20px; height: 20px;
+    border-radius: 5px;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .shot-item.checked .check-box {
+    border-color: var(--done);
+    background: var(--done);
+  }
+  .check-box svg { display: none; }
+  .shot-item.checked .check-box svg { display: block; }
+
+  .shot-text {
+    flex: 1;
+    font-size: 13.5px;
+    color: #ccc;
+    line-height: 1.5;
+    transition: color 0.2s;
+  }
+  .shot-item.checked .shot-text {
+    color: #5fcf7e;
+    text-decoration: line-through;
+    text-decoration-color: rgba(95,207,126,0.4);
+  }
+
+  /* ─────────────────────────────────────
+     REFERENCE IMAGE STRIP
+  ───────────────────────────────────── */
+  .ref-section {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .ref-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ref-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .ref-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* Each image card */
+  .ref-img-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px dashed #2e2e2e;
+    background: #0e0e0e;
+    aspect-ratio: 16 / 9;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  /* When a real image is inside, remove dashed style */
+  .ref-img-card.has-image {
+    border-style: solid;
+    border-color: var(--border);
+  }
+  .ref-img-card:hover {
+    border-color: #555;
+    transform: scale(1.015);
+  }
+  .ref-img-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Placeholder state */
+  .ref-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: repeating-linear-gradient(
+      -45deg,
+      #111 0px, #111 8px,
+      #0d0d0d 8px, #0d0d0d 16px
+    );
+  }
+  .ref-placeholder svg {
+    width: 26px; height: 26px;
+    stroke: #2e2e2e;
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .ref-placeholder .ph-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: #2a2a2a;
+    letter-spacing: 0.1em;
+  }
+  .ref-placeholder .ph-hint {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    color: #2e2e2e;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* Caption bar at the bottom */
+  .ref-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 18px 10px 7px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    font-family: 'Space Mono', monospace;
+    font-size: 8.5px;
+    color: #555;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  /* Show caption text brighter when real image exists */
+  .ref-img-card.has-image .ref-caption { color: #999; }
+
+  /* Red "replace" badge */
+  .ref-badge {
+    position: absolute;
+    top: 7px; right: 7px;
+    background: rgba(232,24,26,0.14);
+    border: 1px solid rgba(232,24,26,0.28);
+    color: var(--red);
+    font-family: 'Space Mono', monospace;
+    font-size: 7.5px;
+    letter-spacing: 0.08em;
+    padding: 2px 6px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .ref-img-card.has-image .ref-badge { display: none; }
+
+  /* HERO */
+  .exercise.hero .exercise-header {
+    background: linear-gradient(135deg, rgba(232,24,26,0.12), transparent);
+    border-bottom: 1px solid rgba(232,24,26,0.2);
+  }
+  .exercise.hero .ex-number { color: var(--red); }
+  .exercise.hero { border-color: rgba(232,24,26,0.35); }
+  .exercise.hero.all-done { border-color: var(--done); }
+  .hero-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    background: var(--red);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-left: auto;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  /* RESET */
+  .reset-wrap { text-align: center; margin-top: 40px; }
+  .reset-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    background: transparent;
+    padding: 10px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .reset-btn:hover { color: var(--text); border-color: #555; }
+
+  /* COMPLETION BANNER */
+  .completion-banner {
+    display: none;
+    text-align: center;
+    padding: 32px 24px;
+    margin: 24px 0;
+    border: 1px solid var(--done);
+    border-radius: 12px;
+    background: var(--done-bg);
+  }
+  .completion-banner.show { display: block; }
+  .completion-banner h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: #5fcf7e;
+    letter-spacing: 0.08em;
+  }
+  .completion-banner p {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #5fcf7e;
+    opacity: 0.6;
+    margin-top: 6px;
+    letter-spacing: 0.1em;
+  }
+
+  /* LIGHTBOX */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0,0,0,0.94);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-inner {
+    position: relative;
+    max-width: 900px;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+    cursor: default;
+  }
+  .lightbox-inner img {
+    width: 100%;
+    display: block;
+    max-height: 80vh;
+    object-fit: contain;
+    background: #111;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.75);
+    border: 1px solid #555;
+    color: #ccc;
+    font-size: 20px;
+    line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .lightbox-cap {
+    background: #111;
+    padding: 10px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: #555;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    header { padding: 36px 16px 28px; }
+    main { padding: 28px 14px 64px; }
+    .exercise-header { padding: 16px 16px; gap: 12px; }
+    .exercise-body { padding: 0 16px 22px; }
+    .ex-name { font-size: 19px; }
+    .ex-number { font-size: 30px; min-width: 36px; }
+    .ref-images { grid-template-columns: 1fr 1fr; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label">📋 Production Shot Script</div>
+  <h1>SLAM<span>BALL</span></h1>
+  <div class="subtitle">Workout Video — Director's Checklist</div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-meta">
+    <span class="done-count" id="doneCount">0</span>
+    <span class="total-label" id="totalLabel">/ 0 SHOTS COMPLETED</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+</div>
+
+<main>
+  <div class="completion-banner" id="completionBanner">
+    <h2>🎬 THAT'S A WRAP</h2>
+    <p>All shots checked. You nailed it.</p>
+  </div>
+
+  <!-- ═══ 01 ═══ -->
+  <div class="exercise" data-id="ex1">
+    <div class="exercise-header" onclick="toggleEx(this)" aria-expanded="true">
+      <div class="ex-number">01</div>
+      <div class="ex-info">
+        <div class="ex-name">Slam Ball Push-Up Transition</div>
+        <div class="ex-progress" id="ex1-prog">0 / 3 shots</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="exercise-body open">
+      <div class="script-block">
+        <div class="script-label">📝 Action Script</div>
+        <ul class="script-steps">
+          <li>Start with girl in push-up position, one hand on slam ball, one on floor</li>
+          <li>Perform 1–2 push-ups with ball under one hand</li>
+          <li>While in plank, she pushes/slides the ball to the other hand (passing motion)</li>
+          <li>Continue with 2 more push-ups on the other side</li>
+        </ul>
+      </div>
+      <div class="shots-label">🎥 Focus Shots</div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Close-up of hands shifting ball during transition</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Side angle for body form — plank alignment visible</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Slight slow-motion during ball passing transition</div>
+      </div>
+      <div class="ref-section">
+        <div class="ref-label">📸 Reference Images</div>
+        <div class="ref-images">
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 1</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <!-- TO ADD IMAGE: replace the div.ref-placeholder above with: <img src="YOUR_URL_HERE" alt=""> -->
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Hand position / push-up form</div>
+          </div>
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 2</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Ball pass / side angle</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 02 ═══ -->
+  <div class="exercise" data-id="ex2">
+    <div class="exercise-header" onclick="toggleEx(this)" aria-expanded="false">
+      <div class="ex-number">02</div>
+      <div class="ex-info">
+        <div class="ex-name">Russian Twists</div>
+        <div class="ex-progress" id="ex2-prog">0 / 3 shots</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="exercise-body">
+      <div class="script-block">
+        <div class="script-label">📝 Action Script</div>
+        <ul class="script-steps">
+          <li>Seated position, feet slightly elevated</li>
+          <li>Ball held with both hands</li>
+          <li>Twist from left → right → left (continuous motion)</li>
+          <li>Head follows the movement — not looking at camera</li>
+        </ul>
+      </div>
+      <div class="shots-label">🎥 Focus Shots</div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Mid shot showing full torso rotation</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Close-up on core engagement during twist</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Smooth slow-motion twist sequence, L→R→L</div>
+      </div>
+      <div class="ref-section">
+        <div class="ref-label">📸 Reference Images</div>
+        <div class="ref-images">
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 1</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Seated twist — wide angle</div>
+          </div>
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 2</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Core engagement close-up</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 03 ═══ -->
+  <div class="exercise" data-id="ex3">
+    <div class="exercise-header" onclick="toggleEx(this)" aria-expanded="false">
+      <div class="ex-number">03</div>
+      <div class="ex-info">
+        <div class="ex-name">Glute Bridge with Ball Raise</div>
+        <div class="ex-progress" id="ex3-prog">0 / 3 shots</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="exercise-body">
+      <div class="script-block">
+        <div class="script-label">📝 Action Script</div>
+        <ul class="script-steps">
+          <li>Lying on floor, knees bent, feet planted</li>
+          <li>Ball held at chest</li>
+          <li>Lift into glute bridge position (hips up)</li>
+          <li>While holding bridge, raise ball straight up above chest → bring back down</li>
+          <li>Perform 2–3 reps</li>
+        </ul>
+      </div>
+      <div class="shots-label">🎥 Focus Shots</div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Side angle showing straight body line in bridge position</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Close-up on core + glutes tension during hold</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Controlled overhead ball raise — 2–3 reps</div>
+      </div>
+      <div class="ref-section">
+        <div class="ref-label">📸 Reference Images</div>
+        <div class="ref-images">
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 1</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Bridge form — side view</div>
+          </div>
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 2</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Ball raise overhead</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 04 ═══ -->
+  <div class="exercise" data-id="ex4">
+    <div class="exercise-header" onclick="toggleEx(this)" aria-expanded="false">
+      <div class="ex-number">04</div>
+      <div class="ex-info">
+        <div class="ex-name">Elevated Leg Sit-Up</div>
+        <div class="ex-progress" id="ex4-prog">0 / 3 shots</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="exercise-body">
+      <div class="script-block">
+        <div class="script-label">📝 Action Script</div>
+        <ul class="script-steps">
+          <li>Upper back on bench, legs elevated (or both legs up in air)</li>
+          <li>Ball held with both hands</li>
+          <li>Perform sit-up while raising ball straight up</li>
+          <li>Controlled up → down motion</li>
+        </ul>
+      </div>
+      <div class="shots-label">🎥 Focus Shots</div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Side angle showing full range of sit-up motion</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Core contraction close-up at peak of movement</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Clean, stable movement — no wobble, smooth ball path</div>
+      </div>
+      <div class="ref-section">
+        <div class="ref-label">📸 Reference Images</div>
+        <div class="ref-images">
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 1</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Bench sit-up starting position</div>
+          </div>
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 2</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Ball raised — peak contraction</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 05 ═══ -->
+  <div class="exercise" data-id="ex5">
+    <div class="exercise-header" onclick="toggleEx(this)" aria-expanded="false">
+      <div class="ex-number">05</div>
+      <div class="ex-info">
+        <div class="ex-name">Alternating Knee Crunches</div>
+        <div class="ex-progress" id="ex5-prog">0 / 3 shots</div>
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="exercise-body">
+      <div class="script-block">
+        <div class="script-label">📝 Action Script</div>
+        <ul class="script-steps">
+          <li>Lying on back, ball held near chest</li>
+          <li>Bring right knee in → slight crunch → back</li>
+          <li>Then left knee in → crunch → back</li>
+          <li>Ball moves slightly forward during crunch and back on release</li>
+        </ul>
+      </div>
+      <div class="shots-label">🎥 Focus Shots</div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Alternating knee rhythm — clear L/R pattern</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Close-up on abs + ball movement (forward on crunch)</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Smooth, controlled pacing — no rush, steady beat</div>
+      </div>
+      <div class="ref-section">
+        <div class="ref-label">📸 Reference Images</div>
+        <div class="ref-images">
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 1</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Knee drive — crunch position</div>
+          </div>
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 2</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Ball forward — ab engagement</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ HERO ═══ -->
+  <div class="exercise hero" data-id="ex6">
+    <div class="exercise-header" onclick="toggleEx(this)" aria-expanded="false">
+      <div class="ex-number">🔥</div>
+      <div class="ex-info">
+        <div class="ex-name">Final Slam — Hero Ending</div>
+        <div class="ex-progress" id="ex6-prog">0 / 5 shots</div>
+      </div>
+      <span class="hero-badge">HERO</span>
+      <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="exercise-body">
+      <div class="script-block">
+        <div class="script-label">📝 Action Script</div>
+        <ul class="script-steps">
+          <li>Girl stands and lifts ball overhead</li>
+          <li>Performs power slam to floor — 2 times</li>
+          <li>NO dust, clean gym surface required</li>
+        </ul>
+      </div>
+      <div class="shots-label">🎥 Focus Shots</div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Full-body slam — wide shot, both slams captured</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Mid shot during impact — power and force visible</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Extreme close-up — ball hitting rubber gym floor</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Ball slightly compressing on impact — slo-mo required</div>
+      </div>
+      <div class="shot-item" onclick="toggleShot(this)">
+        <div class="check-box"><svg viewBox="0 0 12 10" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,5 4,9 11,1"/></svg></div>
+        <div class="shot-text">Slow-motion emphasis confirmed — NO dust, clean surface ✓</div>
+      </div>
+      <div class="ref-section">
+        <div class="ref-label">📸 Reference Images</div>
+        <div class="ref-images">
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 1</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Overhead lift — full body</div>
+          </div>
+          <div class="ref-img-card" onclick="openLightbox(this)">
+            <div class="ref-placeholder">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+              <span class="ph-num">REF 2</span>
+              <span class="ph-hint">Replace src below</span>
+            </div>
+            <div class="ref-badge">Add Image</div>
+            <div class="ref-caption">Ball impact — floor close-up</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reset-wrap">
+    <button class="reset-btn" onclick="resetAll()">↺ Reset All Shots</button>
+  </div>
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightboxBg(event)">
+  <div class="lightbox-inner">
+    <div class="lightbox-close" onclick="closeLightbox()">×</div>
+    <img id="lightboxImg" src="" alt="">
+    <div class="lightbox-cap" id="lightboxCap"></div>
+  </div>
+</div>
+
+<script>
+  const STATE_KEY = 'slamball_shots_v2';
+  let checked = JSON.parse(localStorage.getItem(STATE_KEY) || '{}');
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.shot-item').forEach(item => {
+      if (checked[getShotId(item)]) item.classList.add('checked');
+    });
+    updateAll();
+  });
+
+  function getShotId(item) {
+    const ex = item.closest('.exercise').dataset.id;
+    const shots = [...item.closest('.exercise-body').querySelectorAll('.shot-item')];
+    return `${ex}_${shots.indexOf(item)}`;
+  }
+
+  function toggleShot(el) {
+    el.classList.toggle('checked');
+    const id = getShotId(el);
+    if (el.classList.contains('checked')) checked[id] = true;
+    else delete checked[id];
+    localStorage.setItem(STATE_KEY, JSON.stringify(checked));
+    updateAll();
+  }
+
+  function toggleEx(header) {
+    const body = header.nextElementSibling;
+    const open = body.classList.toggle('open');
+    header.setAttribute('aria-expanded', String(open));
+  }
+
+  function updateAll() {
+    let total = 0, done = 0;
+    document.querySelectorAll('.exercise').forEach(ex => {
+      const items = ex.querySelectorAll('.shot-item');
+      const d = ex.querySelectorAll('.shot-item.checked').length;
+      total += items.length; done += d;
+      const prog = document.getElementById(`${ex.dataset.id}-prog`);
+      if (prog) prog.textContent = `${d} / ${items.length} shots`;
+      ex.classList.toggle('all-done', d === items.length && items.length > 0);
+    });
+    document.getElementById('doneCount').textContent = done;
+    document.getElementById('totalLabel').textContent = `/ ${total} SHOTS COMPLETED`;
+    document.getElementById('progressFill').style.width = (total ? (done/total)*100 : 0) + '%';
+    document.getElementById('completionBanner').classList.toggle('show', done === total && total > 0);
+  }
+
+  function resetAll() {
+    checked = {};
+    localStorage.removeItem(STATE_KEY);
+    document.querySelectorAll('.shot-item').forEach(el => el.classList.remove('checked'));
+    updateAll();
+  }
+
+  // Lightbox: only open if card has a real <img> (not just the placeholder div)
+  function openLightbox(card) {
+    const img = card.querySelector('img');
+    if (!img) return;
+    const cap = card.querySelector('.ref-caption');
+    document.getElementById('lightboxImg').src = img.src;
+    document.getElementById('lightboxCap').textContent = cap ? cap.textContent.trim() : '';
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  function closeLightboxBg(e) {
+    if (e.target === document.getElementById('lightbox')) closeLightbox();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
