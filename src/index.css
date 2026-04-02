@@ -14,12 +14,17 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+html, body {
+  min-height: 100%;
+  height: auto;
+}
+
 body {
   background: var(--black);
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
-  overflow-x: hidden;
+  position: relative;
 }
 
 /* HEADER */
@@ -67,9 +72,10 @@ h1 span { color: var(--red); }
 .tab-nav {
   display: flex;
   justify-content: center;
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 12px 16px;
   margin-top: 24px;
-  padding: 0 24px;
+  padding: 0 20px;
 }
 .tab-btn {
   font-family: 'Space Mono', monospace;
@@ -134,7 +140,7 @@ h1 span { color: var(--red); }
 main {
   max-width: 860px;
   margin: 0 auto;
-  padding: 40px 20px 80px;
+  padding: 40px 20px 120px;
 }
 
 /* EXERCISE BLOCK */

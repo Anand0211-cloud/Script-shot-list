@@ -15,7 +15,7 @@ export const SLAM_BALL_DATA = [
       'Slight slow-motion during ball passing transition'
     ],
     refs: [
-      { num: 1, caption: 'Hand position / push-up form', img: '/src/asset/Slam Ball/Slam ball Pushups 1.png' }
+      { num: 1, caption: 'Hand position / push-up form', img: '/asset/Slam Ball/Slam ball Pushups 1.png' }
     ]
   },
   {
@@ -34,8 +34,8 @@ export const SLAM_BALL_DATA = [
       'Smooth slow-motion twist sequence, L→R→L'
     ],
     refs: [
-      { num: 1, caption: 'Seated twist — wide angle', img: '/src/asset/Slam Ball/Russian Twists.png' },
-      { num: 2, caption: 'Core engagement close-up', img: '/src/asset/Slam Ball/Russian twist 2.png' }
+      { num: 1, caption: 'Seated twist — wide angle', img: '/asset/Slam Ball/Russian Twists.png' },
+      { num: 2, caption: 'Core engagement close-up', img: '/asset/Slam Ball/Russian twist 2.png' }
     ]
   },
   {
@@ -55,7 +55,7 @@ export const SLAM_BALL_DATA = [
       'Controlled overhead ball raise — 2–3 reps'
     ],
     refs: [
-      { num: 1, caption: 'Bridge form — side view', img: '/src/asset/Slam Ball/Glute Brigde with ball raise.png' }
+      { num: 1, caption: 'Bridge form — side view', img: '/asset/Slam Ball/Glute Brigde with ball raise.png' }
     ]
   },
   {
@@ -74,7 +74,7 @@ export const SLAM_BALL_DATA = [
       'Clean, stable movement — no wobble, smooth ball path'
     ],
     refs: [
-      { num: 1, caption: 'Bench sit-up starting position', img: '/src/asset/Slam Ball/Elevated Leg Sit up.png' }
+      { num: 1, caption: 'Bench sit-up starting position', img: '/asset/Slam Ball/Elevated Leg Sit up.png' }
     ]
   },
   {
@@ -93,7 +93,7 @@ export const SLAM_BALL_DATA = [
       'Smooth, controlled pacing — no rush, steady beat'
     ],
     refs: [
-      { num: 1, caption: 'Knee drive — crunch position', img: '/src/asset/Slam Ball/Alternate knee crunhces.png' }
+      { num: 1, caption: 'Knee drive — crunch position', img: '/asset/Slam Ball/Alternate knee crunhces.png' }
     ]
   },
   {
@@ -114,8 +114,8 @@ export const SLAM_BALL_DATA = [
       'Slow-motion emphasis confirmed — NO dust, clean surface ✓'
     ],
     refs: [
-      { num: 1, caption: 'Overhead lift — full body', img: '/src/asset/Slam Ball/Final Slam.png' },
-      { num: 2, caption: 'Ball impact — floor close-up', img: '/src/asset/Slam Ball/ball hitting the floor.png' }
+      { num: 1, caption: 'Overhead lift — full body', img: '/asset/Slam Ball/Final Slam.png' },
+      { num: 2, caption: 'Ball impact — floor close-up', img: '/asset/Slam Ball/ball hitting the floor.png' }
     ]
   }
 ];
@@ -138,7 +138,7 @@ export const LOOP_BAND_DATA = [
       'Slow motion → peak contraction'
     ],
     refs: [
-      { num: 1, caption: 'Body alignment + back engagement', img: '/src/asset/loop Band/bended bent over.png' }
+      { num: 1, caption: 'Body alignment + back engagement', img: '/asset/loop Band/bended bent over.png' }
     ]
   },
   {
@@ -158,7 +158,7 @@ export const LOOP_BAND_DATA = [
       'Slow motion → arms opening'
     ],
     refs: [
-      { num: 1, caption: 'Full form wide shot', img: '/src/asset/loop Band/Bended chest flies.png' }
+      { num: 1, caption: 'Full form wide shot', img: '/asset/loop Band/Bended chest flies.png' }
     ]
   },
   {
@@ -178,7 +178,7 @@ export const LOOP_BAND_DATA = [
       'Slow motion → full extension'
     ],
     refs: [
-      { num: 1, caption: 'Triceps definition back angle', img: '/src/asset/loop Band/tricep extension.png' }
+      { num: 1, caption: 'Triceps definition back angle', img: '/asset/loop Band/tricep extension.png' }
     ]
   },
   {
@@ -197,7 +197,7 @@ export const LOOP_BAND_DATA = [
       'Slow motion → peak curl'
     ],
     refs: [
-      { num: 1, caption: 'Bicep contraction close-up', img: '/src/asset/loop Band/bicep curl.png' }
+      { num: 1, caption: 'Bicep contraction close-up', img: '/asset/loop Band/bicep curl.png' }
     ]
   },
   {
@@ -217,7 +217,7 @@ export const LOOP_BAND_DATA = [
       'Close-up → thighs + band stretch'
     ],
     refs: [
-      { num: 1, caption: 'Squat depth side angle', img: '/src/asset/loop Band/Band squats.png' }
+      { num: 1, caption: 'Squat depth side angle', img: '/asset/loop Band/Band squats.png' }
     ]
   },
   {
@@ -236,7 +236,7 @@ export const LOOP_BAND_DATA = [
       'Slow camera push-in'
     ],
     refs: [
-      { num: 1, caption: 'Intense look close-up', img: '/src/asset/loop Band/hero.png' }
+      { num: 1, caption: 'Intense look close-up', img: '/asset/loop Band/hero.png' }
     ]
   }
 ];
@@ -258,7 +258,7 @@ export const BARBELL_DATA = [
       'Slow motion → final push of plate'
     ],
     refs: [
-      { num: 1, caption: 'Hands sliding plate', img: '/src/asset/Barbell/Plate Loading.png' }
+      { num: 1, caption: 'Hands sliding plate', img: '/asset/Barbell/Plate Loading.png' }
     ]
   },
   {
@@ -277,7 +277,7 @@ export const BARBELL_DATA = [
       'Close-up → plate + bar stability'
     ],
     refs: [
-      { num: 1, caption: 'Squat depth side view', img: '/src/asset/Barbell/Squat.png' }
+      { num: 1, caption: 'Squat depth side view', img: '/asset/Barbell/Squat.png' }
     ]
   },
   {
@@ -296,7 +296,7 @@ export const BARBELL_DATA = [
       'Slow motion → lift from ground'
     ],
     refs: [
-      { num: 1, caption: 'Deadlift full movement', img: '/src/asset/Barbell/Deadlift.png' }
+      { num: 1, caption: 'Deadlift full movement', img: '/asset/Barbell/Deadlift.png' }
     ]
   },
   {
@@ -316,7 +316,7 @@ export const BARBELL_DATA = [
       'Slow motion → top hold'
     ],
     refs: [
-      { num: 1, caption: 'Hip extension side angle', img: '/src/asset/Barbell/Hip Thrust.png' }
+      { num: 1, caption: 'Hip extension side angle', img: '/asset/Barbell/Hip Thrust.png' }
     ]
   },
   {
@@ -335,7 +335,7 @@ export const BARBELL_DATA = [
       'Slow motion → lockout at top'
     ],
     refs: [
-      { num: 1, caption: 'Shoulder press front view', img: '/src/asset/Barbell/Shoulder press.png' }
+      { num: 1, caption: 'Shoulder press front view', img: '/asset/Barbell/Shoulder press.png' }
     ]
   },
   {
@@ -359,7 +359,7 @@ export const BARBELL_DATA = [
       '🎞️ Style: Slight slow-mo, Hair movement / sweat highlights, No fast cuts'
     ],
     refs: [
-      { num: 1, caption: 'Confident expression', img: '/src/asset/Barbell/Aesthetic Hero shot.png' }
+      { num: 1, caption: 'Confident expression', img: '/asset/Barbell/Aesthetic Hero shot.png' }
     ]
   }
 ];
